@@ -1,6 +1,6 @@
 {
  "argv": [
-  "python",
+  "E:/Courses/Projects/E2E_ML_Project_with_MLFlow/mlproj_mlflow\\python.exe",
   "-m",
   "ipykernel_launcher",
   "-f",

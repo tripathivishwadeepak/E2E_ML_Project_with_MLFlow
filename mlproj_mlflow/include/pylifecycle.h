@@ -31,24 +31,28 @@ PyAPI_FUNC(void) _Py_NO_RETURN Py_Exit(int);
 
 /* Bootstrap __main__ (defined in Modules/main.c) */
 PyAPI_FUNC(int) Py_Main(int argc, wchar_t **argv);
+
 PyAPI_FUNC(int) Py_BytesMain(int argc, char **argv);
 
 /* In pathconfig.c */
-Py_DEPRECATED(3.11) PyAPI_FUNC(void) Py_SetProgramName(const wchar_t *);
-Py_DEPRECATED(3.13) PyAPI_FUNC(wchar_t *) Py_GetProgramName(void);
+PyAPI_FUNC(void) Py_SetProgramName(const wchar_t *);
+PyAPI_FUNC(wchar_t *) Py_GetProgramName(void);
 
-Py_DEPRECATED(3.11) PyAPI_FUNC(void) Py_SetPythonHome(const wchar_t *);
-Py_DEPRECATED(3.13) PyAPI_FUNC(wchar_t *) Py_GetPythonHome(void);
+PyAPI_FUNC(void) Py_SetPythonHome(const wchar_t *);
+PyAPI_FUNC(wchar_t *) Py_GetPythonHome(void);
 
-Py_DEPRECATED(3.13) PyAPI_FUNC(wchar_t *) Py_GetProgramFullPath(void);
-Py_DEPRECATED(3.13) PyAPI_FUNC(wchar_t *) Py_GetPrefix(void);
-Py_DEPRECATED(3.13) PyAPI_FUNC(wchar_t *) Py_GetExecPrefix(void);
-Py_DEPRECATED(3.13) PyAPI_FUNC(wchar_t *) Py_GetPath(void);
+PyAPI_FUNC(wchar_t *) Py_GetProgramFullPath(void);
+
+PyAPI_FUNC(wchar_t *) Py_GetPrefix(void);
+PyAPI_FUNC(wchar_t *) Py_GetExecPrefix(void);
+PyAPI_FUNC(wchar_t *) Py_GetPath(void);
+PyAPI_FUNC(void)      Py_SetPath(const wchar_t *);
 #ifdef MS_WINDOWS
 int _Py_CheckPython3(void);
 #endif
 
 /* In their own files */
+PyAPI_FUNC(const char *) Anaconda_GetVersion(void);
 PyAPI_FUNC(const char *) Py_GetVersion(void);
 PyAPI_FUNC(const char *) Py_GetPlatform(void);
 PyAPI_FUNC(const char *) Py_GetCopyright(void);
@@ -60,17 +64,9 @@ typedef void (*PyOS_sighandler_t)(int);
 PyAPI_FUNC(PyOS_sighandler_t) PyOS_getsig(int);
 PyAPI_FUNC(PyOS_sighandler_t) PyOS_setsig(int, PyOS_sighandler_t);
 
-#if !defined(Py_LIMITED_API) || Py_LIMITED_API+0 >= 0x030B0000
-PyAPI_DATA(const unsigned long) Py_Version;
-#endif
-
-#if !defined(Py_LIMITED_API) || Py_LIMITED_API+0 >= 0x030D0000
-PyAPI_FUNC(int) Py_IsFinalizing(void);
-#endif
-
 #ifndef Py_LIMITED_API
 #  define Py_CPYTHON_PYLIFECYCLE_H
-#  include "cpython/pylifecycle.h"
+#  include  "cpython/pylifecycle.h"
 #  undef Py_CPYTHON_PYLIFECYCLE_H
 #endif
 

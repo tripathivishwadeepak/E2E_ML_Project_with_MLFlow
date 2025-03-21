@@ -52,8 +52,8 @@ Python of course has no preprocessor so this doesn't work so well.  Thus,
 pygettext searches only for _() by default, but see the -k/--keyword flag
 below for how to augment this.
 
- [1] https://www.python.org/workshops/1997-10/proceedings/loewis.html
- [2] https://www.gnu.org/software/gettext/gettext.html
+ [1] http://www.python.org/workshops/1997-10/proceedings/loewis.html
+ [2] http://www.gnu.org/software/gettext/gettext.html
 
 NOTE: pygettext attempts to be option and feature compatible with GNU
 xgettext where ever possible. However some options are still missing or are
@@ -162,7 +162,6 @@ import sys
 import glob
 import time
 import getopt
-import ast
 import token
 import tokenize
 
@@ -174,6 +173,7 @@ DEFAULTKEYWORDS = ', '.join(default_keywords)
 EMPTYSTRING = ''
 
 
+
 # The normal pot-file header. msgmerge and Emacs's po-mode work better if it's
 # there.
 pot_header = _('''\
@@ -195,7 +195,7 @@ msgstr ""
 
 ''')
 
-
+
 def usage(code, msg=''):
     print(__doc__ % globals(), file=sys.stderr)
     if msg:
@@ -203,6 +203,7 @@ def usage(code, msg=''):
     sys.exit(code)
 
 
+
 def make_escapes(pass_nonascii):
     global escapes, escape
     if pass_nonascii:
@@ -256,7 +257,7 @@ def normalize(s, encoding):
         s = '""\n"' + lineterm.join(lines) + '"'
     return s
 
-
+
 def containsAny(str, set):
     """Check whether 'str' contains ANY of the chars in 'set'"""
     return 1 in [c in str for c in set]
@@ -305,7 +306,7 @@ def getFilesForName(name):
 
     return []
 
-
+
 class TokenEater:
     def __init__(self, options):
         self.__options = options
@@ -333,71 +334,15 @@ class TokenEater:
                 if ttype == tokenize.STRING and is_literal_string(tstring):
                     self.__addentry(safe_eval(tstring), lineno, isdocstring=1)
                     self.__freshmodule = 0
-                    return
-                if ttype in (tokenize.COMMENT, tokenize.NL, tokenize.ENCODING):
-                    return
-                self.__freshmodule = 0
+                elif ttype not in (tokenize.COMMENT, tokenize.NL):
+                    self.__freshmodule = 0
+                return
             # class or func/method docstring?
             if ttype == tokenize.NAME and tstring in ('class', 'def'):
                 self.__state = self.__suiteseen
                 return
-        if ttype == tokenize.NAME and tstring in ('class', 'def'):
-            self.__state = self.__ignorenext
-            return
         if ttype == tokenize.NAME and tstring in opts.keywords:
             self.__state = self.__keywordseen
-            return
-        if ttype == tokenize.STRING:
-            maybe_fstring = ast.parse(tstring, mode='eval').body
-            if not isinstance(maybe_fstring, ast.JoinedStr):
-                return
-            for value in filter(lambda node: isinstance(node, ast.FormattedValue),
-                                maybe_fstring.values):
-                for call in filter(lambda node: isinstance(node, ast.Call),
-                                   ast.walk(value)):
-                    func = call.func
-                    if isinstance(func, ast.Name):
-                        func_name = func.id
-                    elif isinstance(func, ast.Attribute):
-                        func_name = func.attr
-                    else:
-                        continue
-
-                    if func_name not in opts.keywords:
-                        continue
-                    if len(call.args) != 1:
-                        print(_(
-                            '*** %(file)s:%(lineno)s: Seen unexpected amount of'
-                            ' positional arguments in gettext call: %(source_segment)s'
-                            ) % {
-                            'source_segment': ast.get_source_segment(tstring, call) or tstring,
-                            'file': self.__curfile,
-                            'lineno': lineno
-                            }, file=sys.stderr)
-                        continue
-                    if call.keywords:
-                        print(_(
-                            '*** %(file)s:%(lineno)s: Seen unexpected keyword arguments'
-                            ' in gettext call: %(source_segment)s'
-                            ) % {
-                            'source_segment': ast.get_source_segment(tstring, call) or tstring,
-                            'file': self.__curfile,
-                            'lineno': lineno
-                            }, file=sys.stderr)
-                        continue
-                    arg = call.args[0]
-                    if not isinstance(arg, ast.Constant):
-                        print(_(
-                            '*** %(file)s:%(lineno)s: Seen unexpected argument type'
-                            ' in gettext call: %(source_segment)s'
-                            ) % {
-                            'source_segment': ast.get_source_segment(tstring, call) or tstring,
-                            'file': self.__curfile,
-                            'lineno': lineno
-                            }, file=sys.stderr)
-                        continue
-                    if isinstance(arg.value, str):
-                        self.__addentry(arg.value, lineno)
 
     def __suiteseen(self, ttype, tstring, lineno):
         # skip over any enclosure pairs until we see the colon
@@ -450,9 +395,6 @@ class TokenEater:
                 'lineno': self.__lineno
                 }, file=sys.stderr)
             self.__state = self.__waiting
-
-    def __ignorenext(self, ttype, tstring, lineno):
-        self.__state = self.__waiting
 
     def __addentry(self, msg, lineno=None, isdocstring=0):
         if lineno is None:
@@ -519,6 +461,7 @@ class TokenEater:
                 print('msgstr ""\n', file=fp)
 
 
+
 def main():
     global default_keywords
     try:
@@ -678,7 +621,7 @@ def main():
         if closep:
             fp.close()
 
-
+
 if __name__ == '__main__':
     main()
     # some more test strings

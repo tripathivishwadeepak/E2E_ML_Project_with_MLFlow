@@ -2,12 +2,21 @@
 #  error "this header file must not be included directly"
 #endif
 
-typedef struct _traceback PyTracebackObject;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-struct _traceback {
+typedef struct _traceback {
     PyObject_HEAD
-    PyTracebackObject *tb_next;
-    PyFrameObject *tb_frame;
+    struct _traceback *tb_next;
+    struct _frame *tb_frame;
     int tb_lasti;
     int tb_lineno;
-};
+} PyTracebackObject;
+
+PyAPI_FUNC(int) _Py_DisplaySourceLine(PyObject *, PyObject *, int, int);
+PyAPI_FUNC(void) _PyTraceback_Add(const char *, const char *, int);
+
+#ifdef __cplusplus
+}
+#endif
