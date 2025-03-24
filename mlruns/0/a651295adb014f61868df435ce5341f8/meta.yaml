@@ -1,0 +1,15 @@
+artifact_uri: file:///E:/Courses/Projects/E2E_ML_Project_with_MLFlow/mlruns/0/a651295adb014f61868df435ce5341f8/artifacts
+end_time: 1742731176508
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: a651295adb014f61868df435ce5341f8
+run_name: auspicious-panda-101
+run_uuid: a651295adb014f61868df435ce5341f8
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742731162264
+status: 4
+tags: []
+user_id: Vishwa Deepak
