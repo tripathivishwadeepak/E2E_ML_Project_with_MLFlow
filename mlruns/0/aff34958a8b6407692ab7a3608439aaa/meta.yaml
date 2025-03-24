@@ -1,0 +1,15 @@
+artifact_uri: file:///E:/Courses/Projects/E2E_ML_Project_with_MLFlow/mlruns/0/aff34958a8b6407692ab7a3608439aaa/artifacts
+end_time: 1742797077871
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: aff34958a8b6407692ab7a3608439aaa
+run_name: fearless-hare-70
+run_uuid: aff34958a8b6407692ab7a3608439aaa
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742797048609
+status: 4
+tags: []
+user_id: Vishwa Deepak
